@@ -10,21 +10,22 @@ permissions:
 jobs:
   demo:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     env:
       DISPLAY: ":99"
       DEMO_SIZE: 1280x800
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
           repository: kiranandcode/agda-mode-telemetry
           path: emacs
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
       - run: >
-          sudo apt-get update && sudo apt-get install -y
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends
           agda-bin xvfb xdotool ffmpeg fonts-dejavu-core fonts-noto-core fonts-noto-mono
       - run: Xvfb :99 -screen 0 ${DEMO_SIZE}x24 &
       - run: npm ci

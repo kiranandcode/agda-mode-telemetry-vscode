@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
@@ -26,13 +26,14 @@ jobs:
 
   e2e:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
-      - run: sudo apt-get update && sudo apt-get install -y agda-bin xvfb
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends agda-bin xvfb xauth
       - run: agda --version
       - run: npm ci
       - uses: actions/cache@v4

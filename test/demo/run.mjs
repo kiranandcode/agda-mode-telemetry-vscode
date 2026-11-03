@@ -27,6 +27,10 @@ await launch({
     "window.commandCenter": false,
     "workbench.layoutControl.enabled": false,
     "terminal.integrated.fontSize": 14,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.nonBasicASCII": false,
+    "workbench.activityBar.location": "hidden",
+    "editor.fontFamily": "'DejaVu Sans Mono', monospace",
   },
   env: { DEMO_OUT: out },
 });

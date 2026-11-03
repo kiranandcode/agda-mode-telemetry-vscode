@@ -26,7 +26,7 @@ let recorder = null;
 function startRecording(name) {
   if (!X) return;
   recorder = spawn("ffmpeg", [
-    "-y", "-loglevel", "error", "-f", "x11grab", "-framerate", "15",
+    "-y", "-loglevel", "error", "-f", "x11grab", "-draw_mouse", "0", "-framerate", "15",
     "-video_size", process.env.DEMO_SIZE || "1280x800", "-i", process.env.DISPLAY,
     "-c:v", "libx264", "-preset", "ultrafast", "-crf", "16", "-pix_fmt", "yuv444p",
     path.join(OUT, `${name}.mp4`),
