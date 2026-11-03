@@ -30,6 +30,7 @@ await launch({
     "editor.unicodeHighlight.ambiguousCharacters": false,
     "editor.unicodeHighlight.nonBasicASCII": false,
     "workbench.activityBar.location": "hidden",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
     "editor.fontFamily": "'DejaVu Sans Mono', monospace",
   },
   env: { DEMO_OUT: out },

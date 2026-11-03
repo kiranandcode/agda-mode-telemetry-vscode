@@ -88,6 +88,7 @@ exports.run = async function () {
   }
   await vscode.commands.executeCommand("workbench.action.closeSidebar");
   await vscode.commands.executeCommand("workbench.action.closePanel");
+  await vscode.commands.executeCommand("workbench.action.closeAuxiliaryBar");
   // put the cursor on the hole
   const hole = doc.getText().indexOf("?");
   editor.selection = new vscode.Selection(doc.positionAt(hole), doc.positionAt(hole));
