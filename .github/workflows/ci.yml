@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npx vsce package --no-dependencies -o agda-mode-telemetry.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: agda-mode-telemetry.vsix
+
+  e2e:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: sudo apt-get update && sudo apt-get install -y agda-bin xvfb
+      - run: agda --version
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: .vscode-test/vscode-*
+          key: vscode-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: vscode-${{ runner.os }}-
+      - run: xvfb-run -a npm run test:e2e

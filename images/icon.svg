@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="48" fill="#1e1e2e"/>
+  <text x="116" y="158" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="150" font-weight="bold" fill="#cdd6f4" text-anchor="middle">∀</text>
+  <polyline points="36,208 84,208 104,186 128,222 152,170 172,208 220,208" fill="none" stroke="#89b4fa" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="204" cy="56" r="22" fill="#f38ba8"/>
+</svg>

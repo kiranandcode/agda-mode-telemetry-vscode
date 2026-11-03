@@ -1,0 +1,11 @@
+src/
+test/
+node_modules/
+.vscode-test/
+tsconfig.json
+dist/unit.test.js
+*.vsix
+.gitignore
+images/icon.svg
+.github/
+images/*.gif

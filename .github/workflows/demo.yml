@@ -1,0 +1,43 @@
+# Re-records the README's GIFs (images/*.gif) and commits them.
+name: Demo GIFs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  demo:
+    runs-on: ubuntu-24.04
+    env:
+      DISPLAY: ":99"
+      DEMO_SIZE: 1280x800
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: kiranandcode/agda-mode-telemetry
+          path: emacs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: >
+          sudo apt-get update && sudo apt-get install -y
+          agda-bin xvfb xdotool ffmpeg fonts-dejavu-core fonts-noto-core fonts-noto-mono
+      - run: Xvfb :99 -screen 0 ${DEMO_SIZE}x24 &
+      - run: npm ci
+      - run: DEMO_REPLAY=$PWD/emacs/telemetry-replay.py npm run demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo
+          path: |
+            images/*.gif
+            .vscode-test/demo/*.mp4
+      - name: Commit GIFs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/*.gif
+          git diff --cached --quiet || (git commit -m "Re-record demo GIFs" && git push)

@@ -1,0 +1,43 @@
+# Push a tag to release:  npm version patch && git push --follow-tags
+# Publishes to the VS Code Marketplace and Open VSX when their tokens
+# (VSCE_PAT, OVSX_PAT) are set as repository secrets, and always attaches
+# the .vsix to a GitHub release.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Tag matches package.json
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - run: npm run typecheck && npm run test:unit
+      - run: npx vsce package --no-dependencies -o agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
+          --title "$GITHUB_REF_NAME" --generate-notes
+      - name: VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        if: env.VSCE_PAT != ''
+        run: npx vsce publish --no-dependencies --packagePath agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
+      - name: Open VSX
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        if: env.OVSX_PAT != ''
+        run: npx ovsx publish agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
