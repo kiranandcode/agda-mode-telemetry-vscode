@@ -1,4 +1,5 @@
 # Push a tag to release:  npm version patch && git push --follow-tags
+# Re-run a release's workflow to publish it again, e.g. after adding a token.
 # Publishes to the VS Code Marketplace and Open VSX when their tokens
 # (VSCE_PAT, OVSX_PAT) are set as repository secrets, and always attaches
 # the .vsix to a GitHub release.
@@ -28,9 +29,13 @@ jobs:
       - name: GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >
-          gh release create "$GITHUB_REF_NAME" agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
-          --title "$GITHUB_REF_NAME" --generate-notes
+        run: |
+          f=agda-mode-telemetry-${GITHUB_REF_NAME}.vsix
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$f" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$f" --title "$GITHUB_REF_NAME" --generate-notes
+          fi
       - name: VS Code Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
